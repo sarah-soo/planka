@@ -90,7 +90,14 @@ spec:
               value: http://localhost:3000
               {{- end }}
             - name: SECRET_KEY
+              {{- if .Values.existingSecretkeySecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecretkeySecret }}
+                  key: key
+              {{- else }}
               value: {{ required "A secret key needs to be generated using 'openssl rand -hex 64' and assigned to secretkey." .Values.secretkey }}
+              {{- end }}
             - name: TRUST_PROXY
               value: "0"
             - name: DEFAULT_ADMIN_EMAIL
